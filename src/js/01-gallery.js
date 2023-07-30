@@ -1,52 +1,30 @@
 import { galleryItems } from './gallery-items.js';
+// Описаний в документації
 import SimpleLightbox from 'simplelightbox';
+// Додатковий імпорт стилів
 import 'simplelightbox/dist/simple-lightbox.min.css';
 // Change code below this line
+
 const gallery = document.querySelector('.gallery');
-let largeImageUrl;
-let instance;
 
 const markup = galleryItems
   .map(
     ({ preview, description, original }) => `<li class="gallery__item">
-  <a class="gallery__link" href=${original}>
-    <img
-      class="gallery__image"
-      src="${preview}"
-      data-source="large-image.jpg"
-      alt="${description}"
-    />
+  <a class="gallery__link" href="${original}">
+    <img class="gallery__image" src="${preview}" alt="${description}" />
   </a>
 </li>`
   )
   .join('');
-
 gallery.insertAdjacentHTML('beforeend', markup);
 
-gallery.addEventListener('click', modalClick);
-gallery.addEventListener('keydown', modalCloseEsc);
+const lightbox = new SimpleLightbox('.gallery a', {
+  captions: true,
+  captionPosition: 'bottom',
+  captionsData: 'alt',
+  captionDelay: 500,
+  animationSpeed: 500,
+  fadeSpeed: 1000,
+});
 
-function modalClick(e) {
-  e.preventDefault();
-  const target = e.target;
-  if (target === e.currentTarget) {
-    return;
-  }
-  largeImageUrl = target.parentNode.href;
-  modalOpen();
-}
-
-function modalOpen() {
-  instance = basicLightbox.create(
-    `
-		<img src="${largeImageUrl}">
-	`
-  );
-  instance.show();
-}
-
-function modalCloseEsc(e) {
-  if (e.code === 'Escape' && instance) {
-    instance.close();
-  }
-}
+console.log(galleryItems);
